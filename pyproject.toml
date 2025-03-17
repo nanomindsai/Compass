@@ -1,0 +1,123 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "compass"
+description = "A framework for building search and retrieval applications with LLMs"
+readme = "README.md"
+requires-python = ">=3.9,<3.13"
+license = { file = "LICENSE" }
+dynamic = ["version"]
+authors = [
+    { name = "Your Name", email = "your.email@example.com" },
+]
+keywords = [
+    "nlp",
+    "search",
+    "retrieval",
+    "rag",
+    "llm",
+    "ai",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "pydantic>=2.0.0,<3.0.0",
+    "typing-extensions>=4.5.0",
+    "structlog>=21.1.0",
+    "numpy>=1.22.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.1.0",
+    "ruff>=0.0.54",
+    "mypy>=1.0.0",
+    "pytest>=7.2.1",
+    "pytest-cov>=4.0.0",
+]
+embedders = [
+    "sentence-transformers>=2.2.2",
+    "torch>=2.0.0",
+]
+generators = [
+    "openai>=1.0.0",
+    "transformers>=4.30.0",
+]
+converters = [
+    "pypdf>=3.5.0",
+    "docx2txt>=0.8",
+]
+
+[project.urls]
+Repository = "https://github.com/yourusername/compass"
+Documentation = "https://compass.readthedocs.io"
+Issues = "https://github.com/yourusername/compass/issues"
+
+[tool.hatch.version]
+path = "compass/version.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+    "compass[dev]",
+]
+
+[tool.hatch.envs.test]
+dependencies = [
+    "compass[dev]",
+]
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.9", "3.10", "3.11", "3.12"]
+
+[tool.hatch.envs.test.scripts]
+unit = "pytest {args:test/}"
+integration = "pytest {args:integration/}"
+e2e = "pytest {args:e2e/}"
+types = "mypy compass/"
+lint = "ruff check ."
+format = "black ."
+format-check = "black --check ."
+check = "ruff check compass/ test/"
+fix = "ruff check --fix compass/ test/"
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+select = ["E", "F", "I", "W", "N", "UP", "B", "C4", "SIM", "ARG"]
+ignore = ["E501", "B008"]
+exclude = [
+    ".git",
+    ".ruff_cache",
+    "__pycache__",
+    "build",
+    "dist",
+]
+
+[tool.ruff.isort]
+known-first-party = ["compass"]
+
+[tool.black]
+line-length = 120
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+strict_optional = true
