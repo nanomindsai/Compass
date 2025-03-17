@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)](https://pypi.org/project/compass/)
 
-**Compass** is a flexible, modular framework for building search, retrieval, and knowledge navigation applications powered by LLMs and embeddings.
+**Compass** is a flexible, modular framework for building search, retrieval, and knowledge applications powered by LLMs.
 
 ## Features
 
