@@ -3,12 +3,14 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)](https://pypi.org/project/compass/)
 
-**Compass** is a flexible, modular framework for building search, retrieval, and knowledge applications powered by LLMs.
+**Compass** is a flexible, modular framework for building search, retrieval, and knowledge navigation applications powered by LLMs and embeddings. It features official support for agent frameworks like OpenAI's Agent SDK and Anthropic's Model Context Protocol (MCP).
 
 ## Features
 
 - 🧩 **Modular Components**: Mix and match embedders, retrievers, generators, and other components
 - 🔗 **Easy Integration**: Simple interfaces for connecting with various LLM providers and vector databases
+- 🤖 **Official Agent SDKs**: Built-in support for OpenAI's Assistants API (Agent SDK) and Anthropic's Model Context Protocol (MCP)
+- 🛠️ **Tool Framework**: Create and manage tools for agents to use, with automatic schema generation
 - 📊 **Evaluation Tools**: Built-in metrics and evaluation pipelines to measure performance
 - 🚀 **Scalable**: From prototypes to production-ready applications
 - 🔍 **Extensible**: Easily create custom components to suit your specific use case
@@ -22,10 +24,10 @@ pip install compass
 Or with specific features:
 
 ```bash
-pip install compass[embedders,generators]
+pip install compass[embedders,generators,agents]
 ```
 
-## Quick Start
+## Quick Start: RAG Pipeline
 
 ```python
 from compass.components.embedders import SentenceTransformerEmbedder
@@ -58,6 +60,67 @@ pipe.connect("retriever", "generator")
 # Run the pipeline
 results = pipe.run(query="What is Compass?")
 print(results["generator"])
+```
+
+## Quick Start: OpenAI Agent SDK
+
+```python
+from compass.components.tools import ToolRegistry, FunctionTool
+from compass.components.agents import OpenAIAgent
+
+# Create a tool registry
+tool_registry = ToolRegistry()
+
+# Register a function as a tool
+@tool_registry.register_function
+def search_knowledge_base(query: str) -> str:
+    """
+    Search a knowledge base for information.
+    
+    :param query: The search query
+    :return: Search results
+    """
+    # In a real application, you would search your knowledge base
+    return f"Results for '{query}': Compass is a framework for building RAG applications."
+
+# Create an agent using OpenAI's Agent SDK
+agent = OpenAIAgent(
+    tool_registry=tool_registry,
+    model="gpt-4o",
+    system_prompt="You are a helpful assistant. Use tools to provide accurate information."
+)
+
+# Run the agent
+result = agent.run("Tell me about Compass framework")
+print(result["answer"])
+
+# Continue the conversation using the same thread
+thread_id = result["thread_id"]
+follow_up = agent.run("What can I build with it?", thread_id=thread_id)
+print(follow_up["answer"])
+```
+
+## Quick Start: Anthropic MCP
+
+```python
+from compass.components.tools import ToolRegistry, FunctionTool
+from compass.components.agents import AnthropicAgent
+
+# Create a tool registry and register tools
+# (This can be the same registry used for OpenAI)
+tool_registry = ToolRegistry()
+# ... register tools as in previous example
+
+# Create an agent using Anthropic's Model Context Protocol
+agent = AnthropicAgent(
+    tool_registry=tool_registry,
+    model="claude-3-opus-20240229",
+    system_prompt="You are a helpful assistant. Use tools when necessary."
+)
+
+# Run the agent
+result = agent.run("What can you tell me about France?")
+print(result["answer"])
 ```
 
 ## Contributing
